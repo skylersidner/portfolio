@@ -1,0 +1,9 @@
+{
+  "casting_policy_version": "1.1",
+  "allowlist_universes": [
+    "Super Mario"
+  ],
+  "universe_capacity": {
+    "Super Mario": 24
+  }
+}
