@@ -1,0 +1,25 @@
+<div class="shell">
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a routerLink="/" class="brand">{{ title() }}</a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/#featured-work">Work</a>
+        <a href="/#principles">Approach</a>
+        <a href="/#contact">Contact</a>
+
+        @if (showLibrary) {
+          <a routerLink="/library" class="dev-link">Library</a>
+        }
+      </nav>
+    </div>
+  </header>
+
+  <main class="container content">
+    <router-outlet />
+  </main>
+
+  <footer class="container footer">
+    <p>Quiet Constellation Hybrid foundation • Angular front end • Phase 0-2</p>
+  </footer>
+</div>

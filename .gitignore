@@ -5,3 +5,17 @@
 .squad/sessions/
 # Squad: SubSquad activation file (local to this machine)
 .squad-workstream
+
+# Local backend overrides and secrets
+backend/**/appsettings.Local.json
+backend/**/.env
+backend/**/.env.local
+
+# Editor settings
+.vscode/
+
+# Build artifacts
+backend/**/bin/
+backend/**/obj/
+**/bin/
+**/obj/

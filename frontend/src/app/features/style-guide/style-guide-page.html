@@ -1,0 +1,27 @@
+<app-ui-section
+  kicker="Internal preview"
+  title="Component library"
+  description="This route is intended for development and review only so shared UI pieces can be checked outside the production flow.">
+  <div class="notice panel">
+    <strong>Non-production use</strong>
+    <p>Use this page to review reusable building blocks before they are folded into real screens.</p>
+  </div>
+
+  <div class="button-row panel">
+    <app-button-link label="Primary button" href="#" variant="primary" />
+    <app-button-link label="Secondary button" href="#" />
+  </div>
+
+  <div class="sample-grid">
+    <app-project-card [project]="sampleProject" />
+
+    <article class="panel token-card">
+      <h3>Style tokens</h3>
+      <ul>
+        <li>Quiet midnight surfaces</li>
+        <li>Soft lavender and warm gold accents</li>
+        <li>Rounded cards and restrained motion</li>
+      </ul>
+    </article>
+  </div>
+</app-ui-section>

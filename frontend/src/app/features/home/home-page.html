@@ -1,0 +1,75 @@
+<section class="hero">
+  <div class="panel hero-copy">
+    <p class="eyebrow">{{ store.intro.eyebrow }}</p>
+    <h1>{{ store.intro.headline }}</h1>
+    <p class="lede">{{ store.intro.summary }}</p>
+
+    <div class="actions">
+      <app-button-link label="Explore featured work" href="#featured-work" variant="primary" />
+      @if (showLibrary) {
+        <app-button-link label="Preview component library" routerLink="/library" />
+      }
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    @for (stat of store.heroStats(); track stat.label) {
+      <div class="panel stat-card">
+        <strong>{{ stat.value }}</strong>
+        <span>{{ stat.label }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<app-ui-section
+  sectionId="featured-work"
+  kicker="Selected work"
+  title="Featured work comes first"
+  description="This initial slice favors project discovery, clear wayfinding, and a restrained visual system over resume-heavy framing.">
+  <div class="filter-row panel">
+    <span class="filter-label">Focus</span>
+
+    <div class="filter-group">
+      @for (focus of store.focusAreas; track focus) {
+        <button
+          type="button"
+          class="filter-pill"
+          [class.active]="store.selectedFocus() === focus"
+          (click)="store.setFocus(focus)">
+          {{ focus }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="project-grid">
+    @for (project of store.visibleProjects(); track project.title) {
+      <app-project-card [project]="project" />
+    }
+  </div>
+</app-ui-section>
+
+<app-ui-section
+  sectionId="principles"
+  kicker="Implementation approach"
+  title="Minimal now, extensible later"
+  description="The structure is intentionally lean while still setting up shared UI patterns and signal-friendly state for future expansion.">
+  <div class="principles-grid">
+    @for (principle of store.principles(); track principle.title) {
+      <article class="panel principle-card">
+        <h3>{{ principle.title }}</h3>
+        <p>{{ principle.body }}</p>
+      </article>
+    }
+  </div>
+</app-ui-section>
+
+<section id="contact" class="panel contact-card">
+  <p class="eyebrow">Next step</p>
+  <h2>Open to thoughtful product and platform work</h2>
+  <p>
+    Resume details and contact flow can layer in after this foundation. The current emphasis is strong project framing,
+    reliable structure, and a polished first impression.
+  </p>
+</section>

@@ -4,6 +4,8 @@
 
 This plan describes a relational content model for a developer portfolio where side projects are the primary product and career history supports credibility. The database should make it easy to publish, reorder, feature, and update projects without changing front-end code.
 
+**Chosen relational platform:** PostgreSQL for local development and production hosting.
+
 ## Design goals
 
 - keep projects as the central content object

@@ -2,7 +2,18 @@
 
 This file records notable implementation decisions and why they were made.
 
-## 2026-04-16 12:30 AM CT
+## 2026-04-16 10:11 PM CT
+
+### Decision
+Implementation will proceed using the Quiet Constellation Hybrid concept as the approved UI direction.
+
+### Why
+The concept best matches the desired balance of clean organization, strong project-first navigation, and a more atmospheric visual identity.
+
+### Follow-up
+Significant implementation questions or blockers should be called out clearly in these logs for later review.
+
+## 2026-04-16 10:08 PM CT
 
 ### Decision
 Implementation logs will be maintained separately from the planning package.
