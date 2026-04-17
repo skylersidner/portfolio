@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio UI Prototypes</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(17, 24, 39, 0.86);
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #eef2ff;
+      --muted: #b8c1e3;
+      --accent: #8b9cff;
+      --accent-2: #6ee7d8;
+      --border: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(139,156,255,.28), transparent 0 30%),
+        radial-gradient(circle at bottom right, rgba(110,231,216,.18), transparent 0 28%),
+        var(--bg);
+    }
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+    .hero {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(139,156,255,.18);
+      color: #d9e0ff;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      line-height: 1.05;
+    }
+    p.lead {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      color: #091121;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+    .secondary {
+      background: transparent !important;
+      color: var(--text) !important;
+      border: 1px solid var(--border);
+    }
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <span class="eyebrow">Static portfolio concepts</span>
+      <h1>Five browser-ready portfolio directions for Skyler Sidner</h1>
+      <p class="lead">
+        These lightweight prototypes translate the written design proposals into distinct visual experiences using only HTML, CSS, and a small amount of vanilla JavaScript.
+        Open any concept directly in the browser to compare tone, layout, and interaction style.
+      </p>
+      <div class="actions">
+        <a class="button" href="constellation-storyline.html">Open Constellation Storyline</a>
+        <a class="button secondary" href="quiet-constellation-hybrid.html">Open the new hybrid concept</a>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Prototype list">
+      <article class="card">
+        <h2>Constellation Storyline</h2>
+        <p>A calm, cinematic long-scroll with project waypoints, personal principles, and subtle star-map interactions.</p>
+        <a class="button" href="constellation-storyline.html">View prototype</a>
+      </article>
+
+      <article class="card">
+        <h2>Quiet Grid Showcase</h2>
+        <p>A minimal product-style homepage with a fast project grid, clean hierarchy, and light filtering.</p>
+        <a class="button" href="quiet-grid-showcase.html">View prototype</a>
+      </article>
+
+      <article class="card">
+        <h2>Quiet Constellation Hybrid</h2>
+        <p>A grid-led layout with starry atmosphere, glowing accents, and the reflective tone of the storyline concept.</p>
+        <a class="button" href="quiet-constellation-hybrid.html">View prototype</a>
+      </article>
+
+      <article class="card">
+        <h2>Studio Casebook</h2>
+        <p>An editorial layout that frames projects as case studies with challenge, approach, and outcome.</p>
+        <a class="button" href="studio-casebook.html">View prototype</a>
+      </article>
+
+      <article class="card">
+        <h2>Signal Resume Hybrid</h2>
+        <p>A sharper, recruiter-friendly landing page blending quick credibility signals with selected work.</p>
+        <a class="button" href="signal-resume-hybrid.html">View prototype</a>
+      </article>
+    </section>
+
+    <footer>
+      Created as simple static mockups for review and comparison. No build step required.
+    </footer>
+  </div>
+</body>
+</html>
