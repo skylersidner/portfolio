@@ -22,7 +22,7 @@ This project currently uses:
 - PostgreSQL for local and future hosted relational data
 - Docker for running PostgreSQL locally
 - VS Code for local editing, debugging, and launch profiles
-- NVM with a pinned Node version in `.nvmrc`
+- NVM with a pinned Node version in `frontend/.nvmrc`
 - npm for front-end package management
 
 ## Prerequisites for a new developer
@@ -43,11 +43,11 @@ From a fresh clone of the repository:
 
 1. Clone the repo.
 2. Open the repository root in VS Code.
-3. Activate the pinned Node version from the repository root:
-   - `nvm use`
-   - If your Windows shell does not pick up the change immediately, open a fresh terminal in the repo after this step.
-4. Install front-end dependencies:
+3. Move into the front-end app and activate the pinned Node version:
    - `cd frontend`
+   - `nvm use`
+   - If your Windows shell does not pick up the change immediately, open a fresh terminal in that folder after this step.
+4. Install front-end dependencies:
    - `npm install`
 5. Return to the repository root.
 6. Start Docker Desktop if it is not already running.
@@ -56,8 +56,8 @@ From a fresh clone of the repository:
 8. Start the backend API:
    - `dotnet run --project backend/Portfolio.Api --launch-profile local`
 9. In a separate terminal, start the Angular UI:
-   - `nvm use`
    - `cd frontend`
+   - `nvm use`
    - `npm start`
 
 ## Local URLs
@@ -84,17 +84,19 @@ The backend creates its initial schema on startup and seeds starter portfolio co
 
 ## VS Code debugging
 
-The workspace includes launch profiles for:
+The shared VS Code run configuration is committed in [Portfolio.code-workspace](Portfolio.code-workspace).
+
+That workspace includes launch profiles for:
 
 - a backend-only local API run
 - a front-end watch mode for UI development
 - a full-stack run profile for local development
 
-Use the VS Code Run and Debug panel to start whichever workflow matches the task you are working on.
+Open the workspace file in VS Code to use the shared Run and Debug configuration while keeping local `.vscode` settings machine-specific.
 
 ## Day-to-day development notes
 
-- Run `nvm use` from the repository root before front-end work so the pinned Node version is active.
+- Run `nvm use` from the `frontend` folder before front-end work so the pinned Node version is active.
 - Use the Angular watch flow when working on UI and styling.
 - Use the backend-only profile when working on API, persistence, or data contracts.
 - Docker should remain running when working with the PostgreSQL-backed API.

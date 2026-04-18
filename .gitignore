@@ -11,11 +11,41 @@ backend/**/appsettings.Local.json
 backend/**/.env
 backend/**/.env.local
 
-# Editor settings
+# Editor and IDE settings
 .vscode/
+**/.vscode/
+.idea/
+.history/
+.project
+.classpath
+.c9/
+.settings/
+*.launch
+*.sublime-workspace
+
+# Frontend / Node artifacts
+**/node_modules/
+**/dist/
+**/tmp/
+**/out-tsc/
+**/bazel-out/
+**/.angular/cache/
+**/.sass-cache/
+**/coverage/
+**/typings/
+**/connect.lock
+npm-debug.log*
+yarn-error.log*
+libpeerconnection.log
+testem.log
+__screenshots__/
 
 # Build artifacts
 backend/**/bin/
 backend/**/obj/
 **/bin/
 **/obj/
+
+# OS files
+.DS_Store
+Thumbs.db

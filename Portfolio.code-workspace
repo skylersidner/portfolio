@@ -1,0 +1,93 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build-backend",
+        "type": "shell",
+        "command": "dotnet",
+        "args": [
+          "build",
+          "${workspaceFolder}/backend/Portfolio.Api/Portfolio.Api.csproj"
+        ],
+        "group": "build",
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "frontend-serve",
+        "type": "shell",
+        "command": "pwsh",
+        "args": [
+          "-NoLogo",
+          "-NoProfile",
+          "-Command",
+          "$version = (Get-Content '${workspaceFolder}/frontend/.nvmrc' | Select-Object -First 1).Trim(); $npm = Join-Path $env:LOCALAPPDATA \"nvm\\v$version\\npm.cmd\"; if (!(Test-Path $npm)) { throw \"Node $version is not installed. Run nvm install $version first.\" }; Set-Location '${workspaceFolder}/frontend'; & $npm start"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "isBackground": true,
+        "problemMatcher": {
+          "owner": "typescript",
+          "pattern": "$tsc",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": ".*"
+            },
+            "endsPattern": {
+              "regexp": "Local:\\s+http://localhost:4200|Application bundle generation complete"
+            }
+          }
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated"
+        }
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Backend API: Local",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build-backend",
+        "program": "${workspaceFolder}/backend/Portfolio.Api/bin/Debug/net10.0/Portfolio.Api.dll",
+        "cwd": "${workspaceFolder}/backend/Portfolio.Api",
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Local",
+          "ASPNETCORE_URLS": "https://localhost:7190;http://localhost:5190"
+        },
+        "console": "integratedTerminal",
+        "stopAtEntry": false,
+        "justMyCode": true
+      },
+      {
+        "name": "Frontend UI: Watch",
+        "type": "chrome",
+        "request": "launch",
+        "preLaunchTask": "frontend-serve",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder}/frontend"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Full Stack: Frontend Watch + API",
+        "configurations": [
+          "Backend API: Local",
+          "Frontend UI: Watch"
+        ],
+        "stopAll": true
+      }
+    ]
+  }
+}
