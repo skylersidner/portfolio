@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Portfolio.Api.Contracts;
 using Portfolio.Api.Data;
+using Portfolio.Api.Repositories;
 
 namespace Portfolio.Api.Services;
 
@@ -13,41 +13,26 @@ public interface IPortfolioContentService
     Task<IReadOnlyList<TagResponse>> GetTagsAsync(CancellationToken cancellationToken);
 }
 
-public sealed class PortfolioContentService(PortfolioDbContext dbContext) : IPortfolioContentService
+public sealed class PortfolioContentService(IPortfolioReadRepository portfolioReadRepository) : IPortfolioContentService
 {
     public async Task<IReadOnlyList<ProjectSummaryResponse>> GetProjectsAsync(CancellationToken cancellationToken)
     {
-        var projects = await dbContext.Projects
-            .AsNoTracking()
-            .Include(project => project.ProjectTags)
-                .ThenInclude(projectTag => projectTag.Tag)
-            .Include(project => project.Links)
-            .OrderByDescending(project => project.IsFeatured)
-            .ThenBy(project => project.Title)
-            .ToListAsync(cancellationToken);
-
+        var projects = await portfolioReadRepository.GetProjectsAsync(cancellationToken);
         return projects.Select(MapSummary).ToList();
     }
 
     public async Task<ProjectDetailResponse?> GetProjectBySlugAsync(string slug, CancellationToken cancellationToken)
     {
-        var project = await dbContext.Projects
-            .AsNoTracking()
-            .Include(project => project.ProjectTags)
-                .ThenInclude(projectTag => projectTag.Tag)
-            .Include(project => project.Links)
-            .SingleOrDefaultAsync(project => project.Slug == slug, cancellationToken);
-
+        var project = await portfolioReadRepository.GetProjectBySlugAsync(slug, cancellationToken);
         return project is null ? null : MapDetail(project);
     }
 
     public async Task<IReadOnlyList<TagResponse>> GetTagsAsync(CancellationToken cancellationToken)
-        => await dbContext.Tags
-            .AsNoTracking()
-            .OrderBy(tag => tag.TagType)
-            .ThenBy(tag => tag.Name)
-            .Select(tag => new TagResponse(tag.Slug, tag.Name, tag.TagType))
-            .ToListAsync(cancellationToken);
+    {
+        var tags = await portfolioReadRepository.GetTagsAsync(cancellationToken);
+
+        return tags.Select(tag => new TagResponse(tag.Slug, tag.Name, tag.TagType)).ToList();
+    }
 
     private static ProjectSummaryResponse MapSummary(PortfolioProject project)
         => new(

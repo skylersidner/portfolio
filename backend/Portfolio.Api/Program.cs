@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Portfolio.Api.Configuration;
-using Portfolio.Api.Contracts;
 using Portfolio.Api.Data;
+using Portfolio.Api.Repositories;
 using Portfolio.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +22,7 @@ var databaseSettings = builder.Configuration.GetSection(DatabaseOptions.SectionN
 
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();
+builder.Services.AddControllers();
 
 builder.Services
     .AddOptions<PortfolioAppOptions>()
@@ -64,11 +64,16 @@ if (string.Equals(databaseSettings.Provider, "PostgreSQL", StringComparison.Ordi
     builder.Services.AddDbContext<PortfolioDbContext>(options =>
         options.UseNpgsql(databaseSettings.ConnectionString));
 
+    builder.Services.AddScoped<IPortfolioReadRepository, PortfolioReadRepository>();
+    builder.Services.AddScoped<IContactSubmissionRepository, ContactSubmissionRepository>();
     builder.Services.AddScoped<IPortfolioContentService, PortfolioContentService>();
+    builder.Services.AddScoped<IContactSubmissionService, ContactSubmissionService>();
 }
 else
 {
     builder.Services.AddSingleton<IPortfolioContentService, InMemoryPortfolioContentService>();
+    builder.Services.AddSingleton<IContactSubmissionRepository, InMemoryContactSubmissionRepository>();
+    builder.Services.AddSingleton<IContactSubmissionService, ContactSubmissionService>();
 }
 
 var app = builder.Build();
@@ -90,104 +95,7 @@ if (string.Equals(databaseSettings.Provider, "PostgreSQL", StringComparison.Ordi
 app.UseHttpsRedirection();
 app.UseCors("Frontend");
 
-app.MapGet("/", (IOptions<PortfolioAppOptions> options, IWebHostEnvironment environment) =>
-{
-    var appOptions = options.Value;
-
-    return Results.Ok(new
-    {
-        name = appOptions.Name,
-        environment = environment.EnvironmentName,
-        status = "running",
-        surface = "bff"
-    });
-});
-
-app.MapGet("/api", () => Results.Ok(new
-{
-    resources = new[]
-    {
-        "/api/meta",
-        "/api/projects",
-        "/api/tags",
-        "/api/contact-submissions",
-        "/healthz"
-    }
-}));
-
-app.MapGet("/api/meta", (IOptions<PortfolioAppOptions> appOptions, IOptions<DatabaseOptions> databaseOptions, IWebHostEnvironment environment) =>
-    Results.Ok(new
-    {
-        portfolio = appOptions.Value.Name,
-        environment = environment.EnvironmentName,
-        adminEnabled = appOptions.Value.AdminEnabled,
-        databaseProvider = databaseOptions.Value.Provider
-    }));
-
-app.MapGet("/api/projects", async (IPortfolioContentService contentService, CancellationToken cancellationToken) =>
-    Results.Ok(await contentService.GetProjectsAsync(cancellationToken)));
-
-app.MapGet("/api/projects/{slug}", async (string slug, IPortfolioContentService contentService, CancellationToken cancellationToken) =>
-{
-    var project = await contentService.GetProjectBySlugAsync(slug, cancellationToken);
-
-    return project is null
-        ? Results.NotFound(new { message = $"Project '{slug}' was not found." })
-        : Results.Ok(project);
-});
-
-app.MapGet("/api/tags", async (IPortfolioContentService contentService, CancellationToken cancellationToken) =>
-    Results.Ok(await contentService.GetTagsAsync(cancellationToken)));
-
-app.MapPost("/api/contact-submissions", async (ContactSubmissionRequest request, PortfolioDbContext dbContext, ILoggerFactory loggerFactory, CancellationToken cancellationToken) =>
-{
-    Dictionary<string, string[]>? errors = null;
-
-    if (string.IsNullOrWhiteSpace(request.Name))
-    {
-        errors ??= new Dictionary<string, string[]>();
-        errors["name"] = ["Name is required."];
-    }
-
-    if (string.IsNullOrWhiteSpace(request.Email))
-    {
-        errors ??= new Dictionary<string, string[]>();
-        errors["email"] = ["Email is required."];
-    }
-
-    if (string.IsNullOrWhiteSpace(request.Message))
-    {
-        errors ??= new Dictionary<string, string[]>();
-        errors["message"] = ["Message is required."];
-    }
-
-    if (errors is not null)
-    {
-        return Results.ValidationProblem(errors);
-    }
-
-    var submission = new PortfolioContactSubmission
-    {
-        Name = request.Name.Trim(),
-        Email = request.Email.Trim(),
-        Message = request.Message.Trim(),
-        Company = string.IsNullOrWhiteSpace(request.Company) ? null : request.Company.Trim(),
-        Topic = string.IsNullOrWhiteSpace(request.Topic) ? "general" : request.Topic.Trim(),
-        RelatedProjectSlug = string.IsNullOrWhiteSpace(request.RelatedProjectSlug) ? null : request.RelatedProjectSlug.Trim(),
-        Status = "new"
-    };
-
-    dbContext.ContactSubmissions.Add(submission);
-    await dbContext.SaveChangesAsync(cancellationToken);
-
-    loggerFactory.CreateLogger("ContactSubmissions")
-        .LogInformation("Accepted contact submission from {Email} for topic {Topic}.", submission.Email, submission.Topic ?? "general");
-
-    return Results.Accepted(
-        uri: $"/api/contact-submissions/{submission.Id:N}",
-        value: new ContactSubmissionResult(submission.Id.ToString("N"), "accepted"));
-});
-
+app.MapControllers();
 app.MapHealthChecks("/healthz");
 
 app.Run();
