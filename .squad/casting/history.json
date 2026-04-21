@@ -1,0 +1,22 @@
+{
+  "assignments": [
+    {
+      "assignment_id": "initial-portfolio-2026-04-19",
+      "created_at": "2026-04-19",
+      "universe": "nintendo",
+      "members": [
+        { "name": "Mario", "role": "Lead" },
+        { "name": "Luigi", "role": "Frontend Developer" },
+        { "name": "Bowser", "role": "Backend Developer / DevOps" },
+        { "name": "Rosalina", "role": "Designer" },
+        { "name": "Toad", "role": "QA Tester" },
+        { "name": "Peach", "role": "Product Owner / Business Analyst" },
+        { "name": "Boo", "role": "Web Security Specialist" },
+        { "name": "Yoshi", "role": "Architect" },
+        { "name": "Koopa", "role": "Retrospective Analyst" },
+        { "name": "Scribe", "role": "Session Logger" },
+        { "name": "Ralph", "role": "Work Monitor" }
+      ]
+    }
+  ]
+}
