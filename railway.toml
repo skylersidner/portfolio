@@ -1,5 +1,2 @@
-[build]
-buildCommand = "npm --prefix frontend ci && npm --prefix frontend run build && dotnet publish backend/Portfolio.Api/Portfolio.Api.csproj -c Release -o out"
-
 [deploy]
-startCommand = "dotnet out/Portfolio.Api.dll"
+healthcheckPath = "/healthz"
