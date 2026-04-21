@@ -92,8 +92,14 @@ if (string.Equals(databaseSettings.Provider, "PostgreSQL", StringComparison.Ordi
     await PortfolioDbInitializer.InitializeAsync(dbContext, databaseSettings, app.Logger);
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseCors("Frontend");
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
 
 app.MapControllers();
 app.MapHealthChecks("/healthz");
