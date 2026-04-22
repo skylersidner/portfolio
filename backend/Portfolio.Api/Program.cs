@@ -61,8 +61,10 @@ if (string.Equals(databaseSettings.Provider, "PostgreSQL", StringComparison.Ordi
         throw new InvalidOperationException("Database:ConnectionString must be configured when using the PostgreSQL provider.");
     }
 
+    var npgsqlConnectionString = NormalizeConnectionString(databaseSettings.ConnectionString);
+
     builder.Services.AddDbContext<PortfolioDbContext>(options =>
-        options.UseNpgsql(databaseSettings.ConnectionString));
+        options.UseNpgsql(npgsqlConnectionString));
 
     builder.Services.AddScoped<IPortfolioReadRepository, PortfolioReadRepository>();
     builder.Services.AddScoped<IContactSubmissionRepository, ContactSubmissionRepository>();
@@ -77,6 +79,22 @@ else
 }
 
 var app = builder.Build();
+
+// Converts a postgresql:// URI (as provided by Railway and other PaaS hosts) to the
+// Npgsql key=value format expected by EF Core's ADO.NET connection string parser.
+static string NormalizeConnectionString(string connectionString)
+{
+    if (!connectionString.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) &&
+        !connectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+    {
+        return connectionString;
+    }
+
+    var uri = new Uri(connectionString);
+    var userInfo = uri.UserInfo.Split(':', 2);
+    var database = uri.AbsolutePath.TrimStart('/');
+    return $"Host={uri.Host};Port={uri.Port};Database={database};Username={userInfo[0]};Password={userInfo[1]}";
+}
 
 app.UseExceptionHandler();
 
