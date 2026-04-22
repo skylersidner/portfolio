@@ -10,16 +10,6 @@ public sealed class MetadataController(
     IOptions<DatabaseOptions> databaseOptions,
     IWebHostEnvironment environment) : ControllerBase
 {
-    [HttpGet("/")]
-    public IActionResult GetRoot()
-        => Ok(new
-        {
-            name = appOptions.Value.Name,
-            environment = environment.EnvironmentName,
-            status = "running",
-            surface = "bff"
-        });
-
     [HttpGet("/api")]
     public IActionResult GetApiIndex()
         => Ok(new
